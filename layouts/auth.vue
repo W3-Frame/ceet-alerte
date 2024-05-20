@@ -9,8 +9,7 @@ useHead({
 <template>
   <div class="h-screen flex items-center justify-center overlay">
     <div class="gradient" />
-
-
+    <button class="absolute top-4 p-2 btn btn-neutral">Home</button>
     <slot />
   </div>
 </template>
