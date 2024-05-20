@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.0",
     "@vueuse/firebase": "^10.9.0",
     "@vueuse/nuxt": "^10.9.0",
     "firebase": "^10.12.1",
