@@ -44,21 +44,33 @@
 </template>
 
 <script setup lang="ts">
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  getAdditionalUserInfo,
+  signInWithPopup,
+} from "firebase/auth";
 import { useAuth } from "@vueuse/firebase/useAuth";
 import { useFirebase } from "~/composables/firebase";
+import { firebaseInstance } from "~/utils/FirebaseSingleton";
+import { doc, setDoc } from "firebase/firestore";
 definePageMeta({
   layout: "auth",
 });
 
-const { auth } = useFirebase();
+const { auth, db } = useFirebase();
 const { isAuthenticated, user } = useAuth(auth);
 if (isAuthenticated) {
-  navigateTo("/");
+  // navigateTo("/");
 }
 
 const signIn = () =>
-  signInWithPopup(auth, new GoogleAuthProvider()).then(() => {
+  signInWithPopup(auth, new GoogleAuthProvider()).then(async (result) => {
+    const isNewUser = getAdditionalUserInfo(result)?.isNewUser;
+    const { email, displayName, photoURL, uid } = result.user;
+
+    if (isNewUser) {
+      await setDoc(doc(db, "users", uid), { email, displayName, photoURL });
+    }
     navigateTo("/");
   });
 </script>
